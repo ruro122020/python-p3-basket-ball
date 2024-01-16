@@ -224,9 +224,11 @@ def player_numbers(team_name):
     if game[obj]['team_name'] == team_name:
      return [player['number'] for player in game[obj]['players']]
 
- 
-def player_stats():
-  pass
-
+def player_stats(player_name):
+  players = property_list('players')
+  for player in players:
+    if player.get('name') == player_name:
+      return player
+   
 def average_rebounds_by_shoe_brand():
   pass
