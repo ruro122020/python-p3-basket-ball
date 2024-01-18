@@ -182,28 +182,35 @@ def game_dict():
             ]
         }
     }
-
-def property_list(property_name):
+#helpers
+def players_list():
   game = game_dict()
   players = []
   for obj in game:
-    for player in game[obj][property_name]:
+    for player in game[obj]['players']:
       players.append(player)
   return players
 
+def shoe_brands():
+  players = players_list()
+  shoe_rebounds = {}
+  for player in players:
+    if player['shoe_brand'] not in shoe_rebounds:
+      shoe_rebounds.update({player['shoe_brand']:[player['rebounds_per_game']] })
+    else:
+      shoe_rebounds[player['shoe_brand']].append(player['rebounds_per_game'])
+      
+  return shoe_rebounds
+ 
+###
 def num_points_per_game(player_name):
-  # game = game_dict()
-  # for obj in game:
-  #   for player in game[obj]['players']:
-  #     if player_name == player['name']:
-  #       return player['points_per_game']
-  players = property_list('players')
+  players = players_list()
   for player in players:
     if player['name'] == player_name:
       return player['points_per_game']
  
 def player_age(player_name):
-  players = property_list('players')
+  players = players_list()
   for player in players:
     if player['name'] == player_name:
       return player['age']
@@ -225,10 +232,15 @@ def player_numbers(team_name):
      return [player['number'] for player in game[obj]['players']]
 
 def player_stats(player_name):
-  players = property_list('players')
+  players = players_list()
   for player in players:
     if player.get('name') == player_name:
       return player
    
 def average_rebounds_by_shoe_brand():
-  pass
+  shoes = shoe_brands()
+  average = {}
+  for brand in shoes:
+    average.update({brand: round(sum(shoes[brand]) / len(shoes[brand]), 2) })
+
+  print('\n'.join(f"{key}:  {value:.2f}" for key, value in average.items()))
